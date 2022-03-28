@@ -8,7 +8,7 @@ const puppeteer = require('puppeteer');
 // fs to work with files
 const fs = require('fs');
 // define dist folder
-const distFolder2 = 'dist';
+const distFolder = 'dist';
 
 
 function createFolderIfNotExist(_path)
@@ -39,7 +39,9 @@ function takeScreenShot(_url, _save)
     targetPath = distFolder + '/';
     targetPath += _save;
 
-    await page.goto(_url);
+    await page.goto(_url, {
+      waitUntil: 'networkidle0',
+    });
     await page.screenshot({ path: targetPath });
 
     await browser.close();
@@ -50,5 +52,5 @@ function takeScreenShot(_url, _save)
 // create folder
 createFolderIfNotExist(distFolder);
 // send order to take screenshot
-takeScreenShot('https://jibres.com', 'abc.png');
+takeScreenShot('https://demo.jibres.me/preview/blog/b1/p1', 'abc.png');
 
