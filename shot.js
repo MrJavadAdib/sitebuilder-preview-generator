@@ -7,8 +7,14 @@
 const puppeteer = require('puppeteer');
 // fs to work with files
 const fs = require('fs');
+const path = require('path')
+
+
+
 // define dist folder
 const distFolder = 'dist';
+const addrPreviewList = 'src/preview-list';
+const addrPreviewURL = 'https://demo.jibres.me/preview/';
 
 
 function createFolderIfNotExist(_path)
@@ -49,8 +55,28 @@ function takeScreenShot(_url, _save)
 }
 
 
+function readAndShot()
+{
+  const jsonsInDir = fs.readdirSync(addrPreviewList).filter(file => path.extname(file) === '.json');
+
+  jsonsInDir.forEach(file => {
+    const fileData = fs.readFileSync(path.join(addrPreviewList, file));
+    const json = JSON.parse(fileData.toString());
+
+    for(var attributename in json){
+        console.log(attributename+": "+json[attributename]);
+    }
+
+    // console.log(json);
+  });
+
+  // send order to take screenshot
+  // takeScreenShot('https://demo.jibres.me/preview/blog/b1/p1', 'abc.png');
+}
+
+
 // create folder
 createFolderIfNotExist(distFolder);
-// send order to take screenshot
-takeScreenShot('https://demo.jibres.me/preview/blog/b1/p1', 'abc.png');
+// read json file to create path list
+readAndShot();
 
