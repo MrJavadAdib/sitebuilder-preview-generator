@@ -12,7 +12,6 @@ const path = require('path')
 
 
 // define dist folder
-const distFolder = 'dist';
 const addrPreviewList = 'src/preview-list';
 const addrPreviewURL = 'https://demo.jibres.me/preview/';
 
@@ -31,9 +30,7 @@ function createFolderIfNotExist(_path)
 
 function takeScreenShot(_url, _save)
 {
-  var targetPath = distFolder + '/' + _save;
-
-  var saveFolder = path.dirname(targetPath);
+  var saveFolder = path.dirname(_save);
   createFolderIfNotExist(saveFolder);
 
   // try to get scrrenshot
@@ -47,11 +44,10 @@ function takeScreenShot(_url, _save)
       deviceScaleFactor: 1,
     });
 
-
     await page.goto(_url, {
       waitUntil: 'networkidle0',
     });
-    await page.screenshot({ path: targetPath });
+    await page.screenshot({ path: _save });
 
     await browser.close();
   })();
@@ -78,15 +74,13 @@ function readAndShot()
       for(var previewList in previewArr)
       {
         var previewName = previewArr[previewList];
-        var targetPreview = groupName + '/' + modelName + '/' + previewName;
+        var targetPreviewUrl = addrPreviewURL + groupName + '/' + modelName + '/' + previewName;
+        var targetPreviewFileName = 'dist/' + groupName + '/' + modelName + '/' + modelName + "-" + previewName + '.png';
         
-        var addrTargetUrl = addrPreviewURL + targetPreview;
-        var addrTargetSavePath = targetPreview + '.png';
+        // show in console
+        console.log(targetPreviewUrl + "\t>>\t" + targetPreviewFileName);
 
-        console.log(addrTargetUrl);
-        console.log(addrTargetSavePath);
-
-        takeScreenShot(addrTargetUrl, addrTargetSavePath);
+        takeScreenShot(targetPreviewUrl, targetPreviewFileName);
       }
     }
   });
@@ -95,6 +89,3 @@ function readAndShot()
 
 // read json file to create path list
 readAndShot();
-
-// send order to take screenshot
-// takeScreenShot('https://demo.jibres.me/preview/blog/b1/p1', 'abc.png');
