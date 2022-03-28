@@ -21,7 +21,7 @@ function createFolderIfNotExist(_path)
 {
   try {
     if (!fs.existsSync(_path)) {
-      fs.mkdirSync(_path);
+      fs.mkdirSync(_path, { recursive: true });
     }
   } catch (err) {
     console.error(err);
@@ -31,6 +31,11 @@ function createFolderIfNotExist(_path)
 
 function takeScreenShot(_url, _save)
 {
+  var targetPath = distFolder + '/' + _save;
+
+  var saveFolder = path.dirname(targetPath);
+  createFolderIfNotExist(saveFolder);
+
   // try to get scrrenshot
   (async () => {
     const browser = await puppeteer.launch();
@@ -42,8 +47,6 @@ function takeScreenShot(_url, _save)
       deviceScaleFactor: 1,
     });
 
-    targetPath = distFolder + '/';
-    targetPath += _save;
 
     await page.goto(_url, {
       waitUntil: 'networkidle0',
@@ -57,26 +60,41 @@ function takeScreenShot(_url, _save)
 
 function readAndShot()
 {
+  // get list of json files
   const jsonsInDir = fs.readdirSync(addrPreviewList).filter(file => path.extname(file) === '.json');
 
-  jsonsInDir.forEach(file => {
+  jsonsInDir.forEach(file => 
+  {
+    // read file data
     const fileData = fs.readFileSync(path.join(addrPreviewList, file));
+    // parse as json
     const json = JSON.parse(fileData.toString());
+    // get group name
+    var groupName = path.parse(file).name;
+    // loop for each model
+    for(var modelName in json)
+    {
+      var previewArr =  json[modelName];
+      for(var previewList in previewArr)
+      {
+        var previewName = previewArr[previewList];
+        var targetPreview = groupName + '/' + modelName + '/' + previewName;
+        
+        var addrTargetUrl = addrPreviewURL + targetPreview;
+        var addrTargetSavePath = targetPreview + '.png';
 
-    for(var attributename in json){
-        console.log(attributename+": "+json[attributename]);
+        console.log(addrTargetUrl);
+        console.log(addrTargetSavePath);
+
+        takeScreenShot(addrTargetUrl, addrTargetSavePath);
+      }
     }
-
-    // console.log(json);
   });
-
-  // send order to take screenshot
-  // takeScreenShot('https://demo.jibres.me/preview/blog/b1/p1', 'abc.png');
 }
 
 
-// create folder
-createFolderIfNotExist(distFolder);
 // read json file to create path list
 readAndShot();
 
+// send order to take screenshot
+// takeScreenShot('https://demo.jibres.me/preview/blog/b1/p1', 'abc.png');
