@@ -1,20 +1,25 @@
 /**
  * 
- * 
- * 
+ * v1.0
  **/
 
+// puppeteer to take screenshot
 const puppeteer = require('puppeteer');
-
-// create dist folder
+// fs to work with files
 const fs = require('fs');
-const distFolder = 'dist';
-try {
-  if (!fs.existsSync(distFolder)) {
-    fs.mkdirSync(distFolder);
+// define dist folder
+const distFolder2 = 'dist';
+
+
+function createFolderIfNotExist(_path)
+{
+  try {
+    if (!fs.existsSync(_path)) {
+      fs.mkdirSync(_path);
+    }
+  } catch (err) {
+    console.error(err);
   }
-} catch (err) {
-  console.error(err);
 }
 
 
@@ -41,5 +46,9 @@ function takeScreenShot(_url, _save)
   })();
 }
 
+
+// create folder
+createFolderIfNotExist(distFolder);
 // send order to take screenshot
 takeScreenShot('https://jibres.com', 'abc.png');
+
