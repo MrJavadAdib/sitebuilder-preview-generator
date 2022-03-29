@@ -80,7 +80,7 @@ function readAndShot()
       for(var previewList in previewArr)
       {
         var previewName = previewArr[previewList];
-        var targetPreviewUrl = addrPreviewURL + groupName + '/' + modelName + '/' + previewName;
+        var targetPreviewUrl = addrPreviewURL + groupName + '/' + modelName + '/' + previewName + '?lock=1';
         var targetPreviewFileName = 'dist/' + groupName + '/' + modelName + '/' + modelName + "-" + previewName + '.webp';
         
         // show in console
