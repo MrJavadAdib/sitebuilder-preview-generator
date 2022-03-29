@@ -47,9 +47,15 @@ function takeScreenShot(_url, _save)
     await page.goto(_url, {
       waitUntil: 'networkidle0',
     });
-    await page.screenshot({ path: _save });
+
+    // take png screenshot
+    // await page.screenshot({ path: _save, format: 'png'});
+
+    // take webp screenshot
+    await page.screenshot({ path: _save, format: 'webp'});
 
     await browser.close();
+
   })();
 }
 
@@ -75,7 +81,7 @@ function readAndShot()
       {
         var previewName = previewArr[previewList];
         var targetPreviewUrl = addrPreviewURL + groupName + '/' + modelName + '/' + previewName;
-        var targetPreviewFileName = 'dist/' + groupName + '/' + modelName + '/' + modelName + "-" + previewName + '.png';
+        var targetPreviewFileName = 'dist/' + groupName + '/' + modelName + '/' + modelName + "-" + previewName + '.webp';
         
         // show in console
         console.log(targetPreviewUrl + "\t>>\t" + targetPreviewFileName);
