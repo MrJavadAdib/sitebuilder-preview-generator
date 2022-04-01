@@ -12,7 +12,7 @@ const path = require('path')
 
 
 // define dist folder
-const addrPreviewList = 'src/preview-list';
+const addrPreviewList = 'src/preview-list.json';
 const addrPreviewURL = 'https://demo.jibres.me/preview/';
 
 
@@ -62,21 +62,38 @@ function takeScreenShot(_url, _save)
 
 function readAndShot()
 {
-  // get list of json files
-  const jsonsInDir = fs.readdirSync(addrPreviewList).filter(file => path.extname(file) === '.json');
+  // read file data
+  const fileData = fs.readFileSync(addrPreviewList);
+  // parse as json
+  const json = JSON.parse(fileData.toString());
 
-  jsonsInDir.forEach(file => 
+  // console.log(json);
+  // sample json
+  // {
+  //   header: { h0: [ 'p1' ], h3: [ 'p1' ] },
+  //   blog: { b4: [ 'p1', 'p4' ] }
+  // }
+
+  // loop for each group
+  for(var groupName in json)
   {
-    // read file data
-    const fileData = fs.readFileSync(path.join(addrPreviewList, file));
-    // parse as json
-    const json = JSON.parse(fileData.toString());
-    // get group name
-    var groupName = path.parse(file).name;
+    var groupArr = json[groupName];
+
+    // sample groupName
+    // header
+    // sample groupArr
+    // { h0: [ 'p1', 'p2' ], h3: [ 'p1' ] }
+
     // loop for each model
-    for(var modelName in json)
+    for(var modelName in groupArr)
     {
-      var previewArr =  json[modelName];
+      var previewArr =  groupArr[modelName];
+
+      // sample modelName
+      // h0
+      // sample previewArr
+      // [ 'p1', 'p2' ]
+
       for(var previewList in previewArr)
       {
         var previewName = previewArr[previewList];
@@ -89,7 +106,7 @@ function readAndShot()
         takeScreenShot(targetPreviewUrl, targetPreviewFileName);
       }
     }
-  });
+  }
 }
 
 
