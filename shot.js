@@ -12,8 +12,8 @@ const path = require('path')
 
 
 // define dist folder
-// const addrPreviewList = 'src/preview-list.json';
-const addrPreviewList = 'src/preview-list-test.json';
+const addrPreviewList = 'src/preview-list.json';
+// const addrPreviewList = 'src/preview-list-test.json';
 const addrPreviewURL = 'https://demo.jibres.me/preview/';
 
 
@@ -29,13 +29,13 @@ function createFolderIfNotExist(_path)
 }
 
 
-function takeScreenShot(_url, _save)
+async function takeScreenShot(_url, _save)
 {
   var saveFolder = path.dirname(_save);
   createFolderIfNotExist(saveFolder);
 
   // try to get scrrenshot
-  (async () => {
+  await (async () => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
@@ -45,9 +45,19 @@ function takeScreenShot(_url, _save)
       deviceScaleFactor: 1,
     });
 
-    await page.goto(_url, {
+    const response = await page.goto(_url, {
       waitUntil: 'networkidle0',
     });
+
+    if(response.status() === 200)
+    {
+      // it's okay
+    }
+    else
+    {
+      // show error in red message
+      console.error('\x1b[41m', '\tFailed! Header Status ' + response.status(), '\x1b[40m');
+    }
 
     // take png screenshot
     // await page.screenshot({ path: _save, format: 'png'});
@@ -61,7 +71,7 @@ function takeScreenShot(_url, _save)
 }
 
 
-function readAndShot()
+async function readAndShot()
 {
   // read file data
   const fileData = fs.readFileSync(addrPreviewList);
@@ -103,8 +113,8 @@ function readAndShot()
         
         // show in console
         console.log(targetPreviewUrl + "\t>>\t" + targetPreviewFileName);
-
-        takeScreenShot(targetPreviewUrl, targetPreviewFileName);
+        // do one by one
+        await takeScreenShot(targetPreviewUrl, targetPreviewFileName);
       }
     }
   }
