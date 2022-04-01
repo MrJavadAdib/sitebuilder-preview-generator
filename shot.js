@@ -12,7 +12,8 @@ const path = require('path')
 
 
 // define dist folder
-const addrPreviewList = 'src/preview-list.json';
+// const addrPreviewList = 'src/preview-list.json';
+const addrPreviewList = 'src/preview-list-test.json';
 const addrPreviewURL = 'https://demo.jibres.me/preview/';
 
 
