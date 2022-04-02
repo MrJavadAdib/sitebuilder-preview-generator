@@ -109,7 +109,7 @@ async function readAndShot()
       {
         var previewName = previewArr[previewList];
         var targetPreviewUrl = addrPreviewURL + groupName + '/' + modelName + '/' + previewName + '?lock=1';
-        var targetPreviewFileName = 'dist/' + groupName + '/' + modelName + '/' + modelName + "-" + previewName + '.webp';
+        var targetPreviewFileName = 'pack/' + groupName + '/' + modelName + '/' + modelName + "-" + previewName + '.webp';
         
         // show in console
         console.log(targetPreviewUrl + "\t>>\t" + targetPreviewFileName);
